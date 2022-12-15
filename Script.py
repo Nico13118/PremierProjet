@@ -14,67 +14,172 @@ with open("output.csv", "w", encoding="utf-8") as fichier_csv:
     writer = csv.writer(fichier_csv, delimiter=";")
     writer.writerow(en_tete)
 
-# Récupération d'un lien d'un livre
-product_page_url = [url]
 
-# premiere_recuperation_1 = universal_product_code, price_including, price_excluding, review_rating
-premiere_recuperation_1 = soup.find_all("td")
-liste_recuperation_1 = []
-for premiere_recuperation_2 in premiere_recuperation_1:
-    liste_recuperation_1.append(premiere_recuperation_2.string)
-universal_product_code = [liste_recuperation_1[0]]
-price_including = [liste_recuperation_1[2]]
-price_excluding = [liste_recuperation_1[3]]
-review_rating = [liste_recuperation_1[-1]]
+url_category = "https://books.toscrape.com/catalogue/category/books/fiction_10/index.html"
+page_category = requests.get(url_category)
+soup_category = BeautifulSoup(page_category.content, "html.parser")
+manquant = "https://books.toscrape.com/catalogue/"
 
-# quantite_stock_1 = number_available
-quantite_stock_1 = soup.find_all("td")
-liste_quantite_stock_1 = []
-for quantite_stock_2 in quantite_stock_1:
-    quantite_stock_3 = quantite_stock_2.string
-    quantite_stock_4 = str(quantite_stock_3)
-    resultat = ([str(s) for s in re.findall(r"-?\d+\.?\d*", quantite_stock_3)])
-    liste_quantite_stock_1.append(resultat)
-number_available = liste_quantite_stock_1[5]
+liste_liens_pages = []
+# Une boucle qui va initialiser un lien par rapport au nombre de pages
+recherche_page1 = soup_category.find("li", class_="current")
+if recherche_page1:
+    # Si recherche_page1 est vrai alors supprime les 10 derniers caractère de url_category
+    modif_url_category = url_category[:-10]
+    recherche_page2 = recherche_page1.get_text()
+    #Suppression \n
+    recherche_page3 = recherche_page2.strip()
+    # Suppressions des caractères pour garder le nombre de pages
+    recherche_page4 = recherche_page3[10:]
+    recherche_page4 = int(recherche_page4)
+    a = 0
+    while a != recherche_page4:
+        a = a + 1
+        nouvelle_adresse = f"{modif_url_category}page-{a}.html"
+        liste_liens_pages.append(nouvelle_adresse)
 
-# description_produit_1 = product_description
-description_produit_1 = soup.find_all("p")
-liste_description_produit_1 = []
-for description_produit_2 in description_produit_1:
-    liste_description_produit_1.append(description_produit_2.string)
-product_description = [liste_description_produit_1[3]]
+if not recherche_page1:
+    # Si recherche_page1 = None alors ajoute l'adresse directement dans la liste
+    liste_liens_pages.append(url_category)
+print(liste_liens_pages)
 
-sleep(2)
-# titre_1 = title
-titre_1 = soup.find_all("img")
-liste_titre_1 = []
-for titre_2 in titre_1:
-    liste_titre_1.append(titre_2.get("alt"))
-title = [liste_titre_1[0]]
+# Une boucle qui va lister les url une par une
+nombre_page = len(liste_liens_pages)
+b, c = 0, 0
+nombre_page = nombre_page + 1
+while c < nombre_page:
+    if c < nombre_page:
+        c = c + 1
+        if c == nombre_page:
+            print()
+        if c < nombre_page:
+            resultat = liste_liens_pages[b]
+            b = b + 1
+            resultat = str(resultat)
 
-sleep(2)
-#recuperation_categorie_1 = category
-recuperation_categorie_1 = soup.find_all("a")
-liste_categorie_1 = []
-for recuperation_categorie_2 in recuperation_categorie_1:
-    liste_categorie_1.append(recuperation_categorie_2.string)
-category = [liste_categorie_1[3]]
+            #https://books.toscrape.com/catalogue/soumission_998/index.html
+            global recuperation_liens_livre6
+            url_livre = resultat
+            print(url_livre)
+            url_livre_fusion = url_livre[0:37]
+            page_livre = requests.get(url_livre)
+            soup_livre = BeautifulSoup(page_livre.content, "html.parser")
+            # Récupération des liens de chaque livre dans une catégorie
+            recuperation_liens_livre1 = soup_livre.find_all("a")
+            liste_liens_livres = []
+            for recuperation_liens_livre2 in recuperation_liens_livre1:
+                recuperation_liens_livre3 = recuperation_liens_livre2.get("href")
+                #Suppression des caractères ../
+                recuperation_liens_livre4 = re.sub("\../", "", recuperation_liens_livre3)
+                # Suppression des liens inutiles ( index.html, books_1/index.html
+                if recuperation_liens_livre4 != "index.html":
+                    if recuperation_liens_livre4 != "books_1/index.html":
+                        if recuperation_liens_livre4 != "page-1.html":
+                            if recuperation_liens_livre4 != "page-2.html":
+                                if recuperation_liens_livre4 != "page-3.html":
+                                    if recuperation_liens_livre4 != "page-4.html":
+                                        if recuperation_liens_livre4 != "page-5.html":
+                                            if recuperation_liens_livre4 != "page-6.html":
+                                                if recuperation_liens_livre4 != "page-7.html":
+                                                    if recuperation_liens_livre4 != "page-8.html":
 
-sleep(2)
-# lien_image_1 = image_url
-lien_image_1 = soup.find_all("img")
-liste_lien_image_1 = []
-for lien_image_2 in lien_image_1:
-    lien_image_3 = (lien_image_2.get("src"))
-    lien_image_4 = re.sub("\../", "", lien_image_3)
-    lien_image_5 = url_accueil + lien_image_4
-    liste_lien_image_1.append(lien_image_5)
-image_url = [liste_lien_image_1[0]]
+                                                        # Fusion des url
+                                                        recuperation_liens_livre5 = url_livre_fusion + recuperation_liens_livre4
+                                                        liste_liens_livres.append(recuperation_liens_livre5)
 
-with open("output.csv", "a", encoding="utf8") as fichier_csv:
-    writer = csv.writer(fichier_csv, delimiter=";")
+            liste_liens_livres2 = liste_liens_livres[49:]
+            print(liste_liens_livres2)
+            recuperation_liens_livre6 = liste_liens_livres2
+            liste_livre_sans_doublon = []
 
-    for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url in zip(product_page_url, universal_product_code, title, price_including, price_excluding, number_available, product_description, category, review_rating, image_url):
-        writer.writerow([product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url])
+            # Suppressions des doublons
+            liste_doublons1 = recuperation_liens_livre6
 
+            for liste_doublons2 in liste_doublons1:
+                if liste_doublons2 not in liste_livre_sans_doublon:
+                    liste_livre_sans_doublon.append(liste_doublons2)
 
+            ###################################################################################################
+            print("Une boucle qui va lister les url des livres une par une")
+            resultat_livre = len(liste_livre_sans_doublon)
+
+            d, e = 0, 0
+            resultat_livre = resultat_livre + 1
+            while d < resultat_livre:
+                e = e + 1
+                if e == resultat_livre:
+                    break
+
+                if e < resultat_livre:
+                    resultat_livre1 = liste_livre_sans_doublon[d]
+                    d = d + 1
+
+                    page_livre2 = requests.get(resultat_livre1)
+                    soup_livre2 = BeautifulSoup(page_livre2.content, "html.parser")
+                    # Récupération d'un lien d'un livre
+                    product_page_url = [resultat_livre1]
+                    print(product_page_url)
+                    # premiere_recuperation_1 = universal_product_code, price_including, price_excluding, review_rating
+                    premiere_recuperation_1 = soup_livre2.find_all("td")
+                    liste_recuperation_1 = []
+                    for premiere_recuperation_2 in premiere_recuperation_1:
+                        liste_recuperation_1.append(premiere_recuperation_2.string)
+                    universal_product_code = [liste_recuperation_1[0]]
+                    price_including = [liste_recuperation_1[2]]
+                    price_excluding = [liste_recuperation_1[3]]
+                    review_rating = [liste_recuperation_1[-1]]
+
+                    # quantite_stock_1 = number_available
+                    quantite_stock_1 = soup_livre2.find_all("td")
+                    liste_quantite_stock_1 = []
+                    for quantite_stock_2 in quantite_stock_1:
+                        quantite_stock_3 = quantite_stock_2.string
+                        quantite_stock_4 = str(quantite_stock_3)
+                        resultat = ([str(s) for s in re.findall(r"-?\d+\.?\d*", quantite_stock_3)])
+                        liste_quantite_stock_1.append(resultat)
+                    number_available = liste_quantite_stock_1[5]
+
+                    # description_produit_1 = product_description
+                    description_produit_1 = soup_livre2.find_all("p")
+                    liste_description_produit_1 = []
+                    for description_produit_2 in description_produit_1:
+                        liste_description_produit_1.append(description_produit_2.string)
+                    product_description = [liste_description_produit_1[3]]
+
+                    sleep(2)
+                    # titre_1 = title
+                    titre_1 = soup_livre2.find_all("img")
+
+                    liste_titre_1 = []
+                    for titre_2 in titre_1:
+                        liste_titre_1.append(titre_2.get("alt"))
+                    title = [liste_titre_1[0]]
+                    print(title)
+                    sleep(2)
+                    # recuperation_categorie_1 = category
+                    recuperation_categorie_1 = soup_livre2.find_all("a")
+                    liste_categorie_1 = []
+                    for recuperation_categorie_2 in recuperation_categorie_1:
+                        liste_categorie_1.append(recuperation_categorie_2.string)
+                    category = [liste_categorie_1[3]]
+
+                    sleep(2)
+                    # lien_image_1 = image_url
+                    lien_image_1 = soup_livre2.find_all("img")
+                    liste_lien_image_1 = []
+                    for lien_image_2 in lien_image_1:
+                        lien_image_3 = (lien_image_2.get("src"))
+                        lien_image_4 = re.sub("\../", "", lien_image_3)
+                        lien_image_5 = url_accueil + lien_image_4
+                        liste_lien_image_1.append(lien_image_5)
+                    image_url = [liste_lien_image_1[0]]
+
+                    with open("output.csv", "a", encoding="utf8") as fichier_csv:
+                        writer = csv.writer(fichier_csv, delimiter=";")
+
+                        for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url in zip(
+                                product_page_url, universal_product_code, title, price_including, price_excluding,
+                                number_available, product_description, category, review_rating, image_url):
+                            writer.writerow(
+                                [product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax,
+                                 number_available, product_description, category, review_rating, image_url])
