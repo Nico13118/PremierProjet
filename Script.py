@@ -11,9 +11,26 @@ url_directory = "https://books.toscrape.com/"
 page_directory = requests.get(url_directory)
 soup_directory = BeautifulSoup(page_directory.content, "html.parser")
 ##################################################################################################
-# Création d'un répertoire par catégorie
-shutil.rmtree("C:\Projets\PremierProjet\BooksToScrape")
-os.mkdir("C:\Projets\PremierProjet\BooksToScrape")
+# Condition qui permet de contrôler si le répertoire BookToScrape\Catégorie existe ou pas
+
+recherche_fichier_bookstoscrape_categorie = os.path.exists("C:\BooksToScrape\Catégories")
+recherche_fichier_bookstoscrape = os.path.exists("C:\BooksToScrape")
+if recherche_fichier_bookstoscrape_categorie:
+    #print("Le fichier existe")
+    shutil.rmtree("C:\BooksToScrape\Catégories")
+    if recherche_fichier_bookstoscrape:
+        shutil.rmtree("C:\BooksToScrape")
+        os.mkdir("C:\BooksToScrape")
+        os.mkdir("C:\BooksToScrape\Catégories")
+
+
+
+else:
+    print("Création du fichier BooksToScrape ")
+    os.mkdir("C:\BooksToScrape")
+    os.mkdir("C:\BooksToScrape\Catégories")
+
+# Récupération des noms de catégories
 directory_categorie_1 = soup_directory.find_all("a")
 liste_directory_1 = []
 for directory_categorie_2 in directory_categorie_1:
@@ -25,7 +42,7 @@ liste_directory_2 = liste_directory_1[3:53]
 #print(liste_directory_2)
 
 ###################################################################################################
-#Boucle qui va afficher la liste des catégories puis va créer les répertoires un à un
+#Boucle qui va afficher le nom d'une catégorie puis va créer les répertoires un à un dans "Catégories"
 
 nombre_categorie_accueil1 = len(liste_directory_2)
 nombre_categorie_accueil1 = nombre_categorie_accueil1 + 1
@@ -36,7 +53,7 @@ while h < nombre_categorie_accueil1:
         break
     elif h < nombre_categorie_accueil1:
         nom_categorie_accueil = liste_directory_2[i]
-        os.mkdir(f"C:\Projets\PremierProjet\BooksToScrape\{nom_categorie_accueil}")
+        os.mkdir(f"C:\BooksToScrape\Catégories\{nom_categorie_accueil}")
         i = i + 1
 
 
@@ -44,7 +61,7 @@ j, k = 0, 0
 ##################################################################################################
 # Boucle qui va créer un répertoire Images dans chaque catégorie
 while j < nombre_categorie_accueil1:
-    if os.path.exists(f"C:\Projets\PremierProjet\BooksToScrape\Tavel\Images"):
+    if os.path.exists(f"C:\BooksToScrape\Catégories\Tavel\Images"):
         break
     else:
         j = j + 1
@@ -52,7 +69,7 @@ while j < nombre_categorie_accueil1:
             break
         elif j < nombre_categorie_accueil1:
             nom_categorie_accueil2 = liste_directory_2[k]
-            os.mkdir(f"C:\Projets\PremierProjet\BooksToScrape\{nom_categorie_accueil2}\Images")
+            os.mkdir(f"C:\BooksToScrape\Catégories\{nom_categorie_accueil2}\Images")
             k = k + 1
 
 
@@ -263,7 +280,7 @@ while g < nombre_de_categorie2:
                         liste_lien_image_1 = []
                         for lien_image_2 in lien_image_1:
                             lien_image_3 = (lien_image_2.get("src"))
-                            lien_image_4 = re.sub("\../", "", lien_image_3)
+                            lien_image_4 = re.sub('\../', "", lien_image_3)
                             lien_image_5 = url_accueil + lien_image_4
                             liste_lien_image_1.append(lien_image_5)
                         image_url = [liste_lien_image_1[0]]
@@ -277,13 +294,13 @@ while g < nombre_de_categorie2:
 
 
                         # Création de mon fichier jpeg
-                        z = open(f"C:\Projets\PremierProjet\BooksToScrape\{category2}\images\{title3}.jpg", "wb")
+                        z = open(f"C:\BooksToScrape\Catégories\{category2}\images\{title3}.jpg", "wb")
                         reponse = requests.get(image_url2)
                         z.write(reponse.content)
                         z.close()
                     #print("Sorite de boucle")
 
-                        print(f"Enregistrement des informations du livre '{title2}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : C:\Projets\PremierProjet\BooksToScrape\{category2}")
+                        print(f"Enregistrement des informations du livre '{title2}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : C:\BooksToScrape\Catégories\{category2}")
 
 
                         print("\n \n \n")
@@ -293,15 +310,15 @@ while g < nombre_de_categorie2:
                                    "review_rating", "image_url"]
                         # Création d'un répertoire image par catégorie
 
-                        if os.path.exists(f"C:\Projets\PremierProjet\BooksToScrape\{category2}\output.csv"):
+                        if os.path.exists(f"C:\BooksToScrape\Catégories\{category2}\output.csv"):
                             print()
                         else:
-                            with open(f"C:\Projets\PremierProjet\BooksToScrape\{category2}\output.csv", "w", encoding="utf-8") as fichier_csv:
+                            with open(f"C:\BooksToScrape\Catégories\{category2}\output.csv", "w", encoding="utf-8") as fichier_csv:
                                 writer = csv.writer(fichier_csv, delimiter=";")
                                 writer.writerow(en_tete)
 
                         # Ajout des données dans le fichier csv
-                        with open(f"C:\Projets\PremierProjet\BooksToScrape\{category2}\output.csv", "a", encoding="utf8") as fichier_csv:
+                        with open(f"C:\BooksToScrape\Catégories\{category2}\output.csv", "a", encoding="utf8") as fichier_csv:
                             writer = csv.writer(fichier_csv, delimiter=";")
 
                             for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url in zip(
