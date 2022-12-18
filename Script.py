@@ -1,6 +1,6 @@
 import re
 import shutil
-
+import time
 import requests
 from bs4 import BeautifulSoup
 import csv
@@ -11,24 +11,31 @@ url_directory = "https://books.toscrape.com/"
 page_directory = requests.get(url_directory)
 soup_directory = BeautifulSoup(page_directory.content, "html.parser")
 ##################################################################################################
-# Condition qui permet de contrôler si le répertoire BookToScrape\Catégorie existe ou pas
+# Condition qui permet de contrôler si le répertoire BookToScrape\Catégorie existe ou pas si le fichier existe il sera renommé sous le format d'une date
 
 recherche_fichier_bookstoscrape_categorie = os.path.exists("C:\BooksToScrape\Catégories")
 recherche_fichier_bookstoscrape = os.path.exists("C:\BooksToScrape")
-if recherche_fichier_bookstoscrape_categorie:
-    #print("Le fichier existe")
-    shutil.rmtree("C:\BooksToScrape\Catégories")
-    if recherche_fichier_bookstoscrape:
-        shutil.rmtree("C:\BooksToScrape")
-        os.mkdir("C:\BooksToScrape")
+if recherche_fichier_bookstoscrape:
+    if recherche_fichier_bookstoscrape_categorie:
+        # print("Si le fichier Catégories existe")
+        shutil.rmtree("C:\BooksToScrape\Catégories")
+        print("Création du répertoire Catégories dans C:\BooksToScrape")
         os.mkdir("C:\BooksToScrape\Catégories")
 
+    if not recherche_fichier_bookstoscrape_categorie:
+        os.mkdir("C:\BooksToScrape\Catégories")
 
+    #
+    # if recherche_fichier_bookstoscrape:
+    #     shutil.rmtree("C:\BooksToScrape")
+    #     os.mkdir("C:\BooksToScrape")
+    #     os.mkdir("C:\BooksToScrape\Catégories")
 
 else:
-    print("Création du fichier BooksToScrape ")
+    print("Création du répertoire BooksToScrape et Catégories")
     os.mkdir("C:\BooksToScrape")
     os.mkdir("C:\BooksToScrape\Catégories")
+
 
 # Récupération des noms de catégories
 directory_categorie_1 = soup_directory.find_all("a")
@@ -39,38 +46,40 @@ for directory_categorie_2 in directory_categorie_1:
     #print(directory_categorie_3)
     liste_directory_1.append(directory_categorie_3)
 liste_directory_2 = liste_directory_1[3:53]
+
 #print(liste_directory_2)
 
 ###################################################################################################
 #Boucle qui va afficher le nom d'une catégorie puis va créer les répertoires un à un dans "Catégories"
-
 nombre_categorie_accueil1 = len(liste_directory_2)
-nombre_categorie_accueil1 = nombre_categorie_accueil1 + 1
+nombre_categorie_accueil2 = nombre_categorie_accueil1 + 1
 h, i = 0, 0
-while h < nombre_categorie_accueil1:
+while h < nombre_categorie_accueil2:
     h = h + 1
-    if h == nombre_categorie_accueil1:
+    if h == nombre_categorie_accueil2:
         break
-    elif h < nombre_categorie_accueil1:
+    elif h < nombre_categorie_accueil2:
         nom_categorie_accueil = liste_directory_2[i]
         os.mkdir(f"C:\BooksToScrape\Catégories\{nom_categorie_accueil}")
         i = i + 1
 
 
-j, k = 0, 0
+
 ##################################################################################################
-# Boucle qui va créer un répertoire Images dans chaque catégorie
-while j < nombre_categorie_accueil1:
-    if os.path.exists(f"C:\BooksToScrape\Catégories\Tavel\Images"):
+# Boucle qui va créer un répertoire Images dans chaque catégorie du répertoire Catégories
+nombre_categorie_accueil3 = nombre_categorie_accueil1 + 1
+j, k = 0, 0
+while j < nombre_categorie_accueil3:
+    # if os.path.exists(f"C:\BooksToScrape\Catégories\{nom_categorie_accueil2}\Images"):
+    #     break
+    j = j + 1
+    if j == nombre_categorie_accueil3:
         break
-    else:
-        j = j + 1
-        if j == nombre_categorie_accueil1:
-            break
-        elif j < nombre_categorie_accueil1:
-            nom_categorie_accueil2 = liste_directory_2[k]
-            os.mkdir(f"C:\BooksToScrape\Catégories\{nom_categorie_accueil2}\Images")
-            k = k + 1
+
+    elif j < nombre_categorie_accueil3:
+        nom_categorie_accueil2 = liste_directory_2[k]
+        os.mkdir(f"C:\BooksToScrape\Catégories\{nom_categorie_accueil2}\Images")
+        k = k + 1
 
 
 ##################################################################################################
@@ -112,6 +121,10 @@ while g < nombre_de_categorie2:
         url_category = liste_categorie_accueil2[f]
         f = f + 1
     if g == nombre_de_categorie2:
+        print("Ligne 120: Fin du programme")
+        nom, ext = os.path.splitext("C:\BooksToScrape\Catégories")
+        dateiso = time.strftime('%Y_%m_%d_%H_%M')
+        os.rename("C:\BooksToScrape\Catégories", nom + '_' + dateiso + ext)
         break
     #print(url_category)
 
@@ -238,7 +251,7 @@ while g < nombre_de_categorie2:
                         liste_quantite_stock_1 = []
                         for quantite_stock_2 in quantite_stock_1:
                             quantite_stock_3 = quantite_stock_2.string
-                            quantite_stock_4 = str(quantite_stock_3)
+                            #quantite_stock_4 = str(quantite_stock_3)
                             resultat = ([str(s) for s in re.findall(r"-?\d+\.?\d*", quantite_stock_3)])
                             liste_quantite_stock_1.append(resultat)
                         number_available = liste_quantite_stock_1[5]
@@ -254,13 +267,12 @@ while g < nombre_de_categorie2:
                         sleep(1)
                         # titre_1 = title
                         titre_1 = soup_livre2.find_all("img")
-
                         liste_titre_1 = []
                         for titre_2 in titre_1:
                             liste_titre_1.append(titre_2.get("alt"))
-                        title = [liste_titre_1[0]]
-
-
+                        title1 = liste_titre_1[0]
+                        title2 = re.sub('\W', " ", title1)
+                        title = [title2]
 
                         sleep(1)
                         # recuperation_categorie_1 = category
@@ -285,22 +297,19 @@ while g < nombre_de_categorie2:
                             liste_lien_image_1.append(lien_image_5)
                         image_url = [liste_lien_image_1[0]]
 
-                        image_url2 = liste_lien_image_1[0]
-                        category2 = liste_categorie_1[3]
-                        title2 = liste_titre_1[0]
-                        title3 = re.sub("\:", "", title2)
-                        #print(f"C:\Projets\PremierProjet\BooksToScrape\{category2}\Images\{title2}.jpg")
-                        #print()
-
 
                         # Création de mon fichier jpeg
-                        z = open(f"C:\BooksToScrape\Catégories\{category2}\images\{title3}.jpg", "wb")
+                        image_url2 = liste_lien_image_1[0]
+                        category2 = liste_categorie_1[3]
+                        title3 = title2
+
+                        z = open(f"C:\BooksToScrape\Catégories\{category2}\Images\{title3}.jpg", "wb")
                         reponse = requests.get(image_url2)
                         z.write(reponse.content)
                         z.close()
                     #print("Sorite de boucle")
 
-                        print(f"Enregistrement des informations du livre '{title2}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : C:\BooksToScrape\Catégories\{category2}")
+                        print(f"Enregistrement des informations du livre '{title3}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : C:\BooksToScrape\Catégories\{category2}")
 
 
                         print("\n \n \n")
