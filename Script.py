@@ -281,7 +281,7 @@ while g < nombre_de_categorie2:
                         description_produit_1 = soup_livre2.find_all("p")
                         liste_description_produit_1 = []
                         for description_produit_2 in description_produit_1:
-                            liste_description_produit_1.append(description_produit_2.string)
+                            liste_description_produit_1.append(description_produit_2.get_text())
                         product_description = [liste_description_produit_1[3]]
                         #print("Ligne 148", product_description)
 
@@ -292,8 +292,8 @@ while g < nombre_de_categorie2:
                         for titre_2 in titre_1:
                             liste_titre_1.append(titre_2.get_text())
                         title1 = liste_titre_1[0]
-                        #title2 = re.sub('\W', " ", title1)
-                        title2 = title1
+                        title2 = re.sub('\W', " ", title1)
+                        #title2 = title1
                         title = [title2]
 
                         sleep(1)
