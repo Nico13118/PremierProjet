@@ -287,12 +287,13 @@ while g < nombre_de_categorie2:
 
                         sleep(1)
                         # titre_1 = title
-                        titre_1 = soup_livre2.find_all("img")
+                        titre_1 = soup_livre2.find("h1")
                         liste_titre_1 = []
                         for titre_2 in titre_1:
-                            liste_titre_1.append(titre_2.get("alt"))
+                            liste_titre_1.append(titre_2.get_text())
                         title1 = liste_titre_1[0]
-                        title2 = re.sub('\W', " ", title1)
+                        #title2 = re.sub('\W', " ", title1)
+                        title2 = title1
                         title = [title2]
 
                         sleep(1)
