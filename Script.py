@@ -7,9 +7,8 @@ import csv
 from time import sleep
 import os
 
-url_directory = "https://books.toscrape.com/"
-page_directory = requests.get(url_directory)
-soup_directory = BeautifulSoup(page_directory.content, "html.parser")
+
+global url_category, page_accueil, url_accueil, page_directory, page_category, reponse, liste_categorie_accueil2, recuperation_liens_livre6
 ##################################################################################################
 # Condition qui permet de contrôler si le répertoire BookToScrape\Catégorie existe ou pas si le fichier existe il sera renommé sous le format d'une date
 
@@ -36,7 +35,21 @@ else:
     os.mkdir("C:\BooksToScrape")
     os.mkdir("C:\BooksToScrape\Catégories")
 
+##################################################################################################
+page_directory2 = 0
+while not page_directory2 == 200:
+    url_directory = "https://books.toscrape.com/"
+    try:
+        page_directory = requests.get(url_directory)
+        page_directory2 = page_directory.status_code
+        if page_directory2 == 200:
+            print(f"Test de connexion sur le site {url_directory}: OK")
 
+    except:
+        print("Problème de connexion")
+        sleep(15)
+
+soup_directory = BeautifulSoup(page_directory.content, "html.parser")
 # Récupération des noms de catégories
 directory_categorie_1 = soup_directory.find_all("a")
 liste_directory_1 = []
@@ -85,12 +98,21 @@ while j < nombre_categorie_accueil3:
 ##################################################################################################
 ##################################################################################################
 # Création d'une liste de lien  pour chaque catégorie de la page d'accueil books.toscrape.com
-url_accueil = "https://books.toscrape.com/"
-page_accueil = requests.get(url_accueil)
+page_accueil2 = 0
+while not page_accueil2 == 200:
+    url_accueil = "https://books.toscrape.com/"
+    try:
+        page_accueil = requests.get(url_accueil)
+        page_accueil2 = page_accueil.status_code
+        if page_accueil2 == 200:
+            print("")
+    except:
+        print("Problème de connexion")
+        sleep(15)
 soup_accueil = BeautifulSoup(page_accueil.content, "html.parser")
 index = "index.html"
 books1 = "catalogue/category/books_1/index.html"
-global liste_categorie_accueil2
+
 categorie_page_accueil1 = soup_accueil.find_all("a")
 liste_categorie_accueil = []
 for categorie_page_accueil2 in categorie_page_accueil1:
@@ -106,9 +128,9 @@ liste_categorie_accueil2 = liste_categorie_accueil[:50]
 # print(len(liste_categorie_accueil2))
 nombre_de_categorie1 = len(liste_categorie_accueil2)
 
-global url_category
+
 ##################################################################################################
-# Création d'une boucle qui va lister une par une les liens de chaque catégorie
+# Création d'une boucle qui va lister les liens de chaque catégorie une par une
 
 #print("Liste des catégories accueil:\n", liste_categorie_accueil2)
 f, g = 0, 0
@@ -130,12 +152,21 @@ while g < nombre_de_categorie2:
 
 
     ################################################################################################
-    page_category = requests.get(url_category)
+    page_category2 = 0
+    while not page_category2 == 200:
+        try:
+            page_category = requests.get(url_category)
+            page_category2 = page_category.status_code
+            if page_category2 == 200:
+                print("")
+        except:
+            print("Problème de connexion")
+            sleep(15)
+
     soup_category = BeautifulSoup(page_category.content, "html.parser")
     manquant = "https://books.toscrape.com/catalogue/"
 
     liste_liens_pages = []
-    ###########################################################################################
     # Une boucle qui va initialiser un lien par rapport au nombre de pages
     recherche_page1 = soup_category.find("li", class_="current")
     if recherche_page1:
@@ -175,7 +206,6 @@ while g < nombre_de_categorie2:
                 #print(resultat)
 
 
-                global recuperation_liens_livre6
                 url_livre = resultat
                 #print("Ligne 63", url_livre)
                 url_livre_fusion = url_livre[0:37]
@@ -236,7 +266,7 @@ while g < nombre_de_categorie2:
                         # Récupération du lien pour un livre
                         product_page_url = [resultat_livre1]
                         #print("Ligne 121", product_page_url)
-                        # premiere_recuperation_1 = universal_product_code, price_including, price_excluding, review_rating
+
                         premiere_recuperation_1 = soup_livre2.find_all("td")
                         liste_recuperation_1 = []
                         for premiere_recuperation_2 in premiere_recuperation_1:
@@ -304,7 +334,16 @@ while g < nombre_de_categorie2:
                         title3 = title2
 
                         z = open(f"C:\BooksToScrape\Catégories\{category2}\Images\{title3}.jpg", "wb")
-                        reponse = requests.get(image_url2)
+                        reponse2 = 0
+                        while not reponse2 == 200:
+                            try:
+                                reponse = requests.get(image_url2)
+                                reponse2 = reponse.status_code
+                                if reponse2 == 200:
+                                    print("")
+                            except:
+                                print("Problème de connexion")
+                                sleep(15)
                         z.write(reponse.content)
                         z.close()
                     #print("Sorite de boucle")
