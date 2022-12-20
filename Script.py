@@ -13,23 +13,23 @@ data = os.getcwd()
 ##################################################################################################
 # Condition qui permet de contrôler si le répertoire BookToScrape\Catégorie existe ou pas si le fichier existe il sera renommé sous le format d'une date
 
-recherche_fichier_bookstoscrape_categories = os.path.exists(f"{data}\BooksToScrape\Catégories")
+recherche_fichier_bookstoscrape_categories = os.path.exists(f"{data}\BooksToScrape\Categories")
 recherche_fichier_bookstoscrape = os.path.exists(f"{data}\BooksToScrape")
 if recherche_fichier_bookstoscrape:
     if recherche_fichier_bookstoscrape_categories:
         # print("Si le fichier Catégories existe")
-        shutil.rmtree(f"{data}\BooksToScrape\Catégories")
-        print(f"Création du répertoire Catégories dans {data}")
-        os.mkdir(f"{data}\BooksToScrape\Catégories")
+        shutil.rmtree(f"{data}\\BooksToScrape\\Categories")
+        print(f"Création du répertoire Catgories dans {data}")
+        os.mkdir(f"{data}\\BooksToScrape\\Categories")
 
     if not recherche_fichier_bookstoscrape_categories:
-        os.mkdir(f"{data}\BooksToScrape\Catégories")
+        os.mkdir(f"{data}\\BooksToScrape\\Categories")
 
 
 else:
     print("Création du répertoire BooksToScrape et Catégories")
-    os.mkdir(f"{data}\BooksToScrape")
-    os.mkdir(f"{data}\BooksToScrape\Catégories")
+    os.mkdir(f"{data}\\BooksToScrape")
+    os.mkdir(f"{data}\\BooksToScrape\\Categories")
 
 ##################################################################################################
 page_directory2 = 0
@@ -69,7 +69,7 @@ while h < nombre_categorie_accueil2:
         break
     elif h < nombre_categorie_accueil2:
         nom_categorie_accueil = liste_directory_2[i]
-        os.mkdir(f"{data}\BooksToScrape\Catégories\{nom_categorie_accueil}")
+        os.mkdir(f"{data}\\BooksToScrape\\Categories\\{nom_categorie_accueil}")
         i = i + 1
 
 
@@ -84,7 +84,7 @@ while j < nombre_categorie_accueil3:
         break
     elif j < nombre_categorie_accueil3:
         nom_categorie_accueil2 = liste_directory_2[k]
-        os.mkdir(f"{data}\BooksToScrape\Catégories\{nom_categorie_accueil2}\Images")
+        os.mkdir(f"{data}\\BooksToScrape\\Categories\\{nom_categorie_accueil2}\\Images")
         k = k + 1
 
 
@@ -134,10 +134,10 @@ while g < nombre_de_categorie2:
         url_category = liste_categorie_accueil2[f]
         f = f + 1
     if g == nombre_de_categorie2:
-        print("Ligne 120: Fin du programme")
-        nom, ext = os.path.splitext(f"{data}\BooksToScrape\Catégories")
+        print("Téléchargement terminé")
+        nom, ext = os.path.splitext(f"{data}\\BooksToScrape\\Categories")
         dateiso = time.strftime('%Y_%m_%d_%H_%M')
-        os.rename(f"{data}\BooksToScrape\Catégories", nom + '_' + dateiso + ext)
+        os.rename(f"{data}\\BooksToScrape\\Categories", nom + '_' + dateiso + ext)
         break
     #print(url_category)
 
@@ -325,7 +325,7 @@ while g < nombre_de_categorie2:
                         category2 = liste_categorie_1[3]
                         title3 = title2
 
-                        z = open(f"{data}\BooksToScrape\Catégories\{category2}\Images\{title3}.jpg", "wb")
+                        z = open(f"{data}\\BooksToScrape\\Categories\\{category2}\\Images\\{title3}.jpg", "wb")
                         reponse2 = 0
                         while not reponse2 == 200:
                             try:
@@ -340,7 +340,7 @@ while g < nombre_de_categorie2:
                         z.close()
                     #print("Sorite de boucle")
 
-                        print(f"Enregistrement des informations du livre '{title3}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}\BooksToScrape\Catégories\{category2}")
+                        print(f"Enregistrement des informations du livre '{title3}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}\\BooksToScrape\\Categories\\{category2}")
 
 
                         print("\n \n \n")
@@ -350,15 +350,15 @@ while g < nombre_de_categorie2:
                                    "review_rating", "image_url"]
                         # Création d'un répertoire image par catégorie
 
-                        if os.path.exists(f"{data}\BooksToScrape\Catégories\{category2}\output.csv"):
+                        if os.path.exists(f"{data}\\BooksToScrape\\Categories\\{category2}\\output.csv"):
                             print()
                         else:
-                            with open(f"{data}\BooksToScrape\Catégories\{category2}\output.csv", "w", encoding="utf-8") as fichier_csv:
+                            with open(f"{data}\\BooksToScrape\\Categories\\{category2}\\output.csv", "w", encoding="utf-8") as fichier_csv:
                                 writer = csv.writer(fichier_csv, delimiter=";")
                                 writer.writerow(en_tete)
 
                         # Ajout des données dans le fichier csv
-                        with open(f"{data}\BooksToScrape\Catégories\{category2}\output.csv", "a", encoding="utf8") as fichier_csv:
+                        with open(f"{data}\\BooksToScrape\\Categories\\{category2}\\output.csv", "a", encoding="utf8") as fichier_csv:
                             writer = csv.writer(fichier_csv, delimiter=";")
 
                             for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url in zip(
