@@ -252,9 +252,6 @@ print("Liste de livres sans doublons", liste_livre_sans_doublon)
 
 # Boucle qui m'affiche les liens de chaque livre pour reconstitution du lien et suppression des liens indésirable
 
-# while not yy == nombre_de_livre:
-#     if yy == nombre_de_livre:
-#         break
 liste_clean1 = []
 yy = 0
 while not yy == nombre_de_livre:
@@ -333,15 +330,8 @@ for liste_clean3 in liste_clean1:
         #print("Ligne 148", product_description)
 
         sleep(1)
-        # titre_1 = title
-        titre_1 = soup_lien_livre4.find("h1")
-        liste_titre_1 = []
-        for titre_2 in titre_1:
-            liste_titre_1.append(titre_2.get_text())
-        title1 = liste_titre_1[0]
-        title2 = re.sub('\W', " ", title1)
-        #title2 = title1
-        title = [title2]
+        # title
+        title = titre_image
 
         sleep(1)
         # recuperation_categorie_1 = category
@@ -367,7 +357,7 @@ for liste_clean3 in liste_clean1:
         # Création de mon fichier jpeg
         image_url2 = liste_lien_image_1[0]
         category2 = liste_categorie_1[3]
-        title3 = title2
+        title3 = titre_image
 
         z = open(f"{data}/BooksToScrape/Categories/{category2}/Images/{title3}.jpg", "wb")
         reponse2 = 0
