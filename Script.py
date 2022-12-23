@@ -19,11 +19,13 @@ recherche_fichier_bookstoscrape = os.path.exists(f"{data}/BooksToScrape")
 if recherche_fichier_bookstoscrape:
     if recherche_fichier_bookstoscrape_categories:
         # print("Si le fichier Catégories existe")
+        print("Suppression du répertoire Categories")
         shutil.rmtree(f"{data}/BooksToScrape/Categories")
-        print(f"Création du répertoire Catgories dans {data}")
+        print(f"Création du répertoire Catgories dans {data}/BooksToScrape")
         os.mkdir(f"{data}/BooksToScrape/Categories")
 
     if not recherche_fichier_bookstoscrape_categories:
+        print(f"Création du répertoire Catgories dans {data}/BooksToScrape")
         os.mkdir(f"{data}/BooksToScrape/Categories")
 
 
@@ -62,6 +64,7 @@ liste_directory_2 = liste_directory_1[3:53]
 
 ###################################################################################################
 #Boucle qui va créer un répertoire pour chaque catégorie
+print("Création d'un répertoire par catégorie dans BooksToScrape")
 nombre_categorie_accueil1 = len(liste_directory_2)
 nombre_categorie_accueil2 = nombre_categorie_accueil1 + 1
 h, i = 0, 0
@@ -78,6 +81,7 @@ while h < nombre_categorie_accueil2:
 
 ##################################################################################################
 # Boucle qui va créer un répertoire Images dans "Categories/le_nom_de_la_catégorie"
+print("Création du répertoire Images dans chaque catégorie")
 nombre_categorie_accueil3 = nombre_categorie_accueil1 + 1
 j, k = 0, 0
 while j < nombre_categorie_accueil3:
@@ -123,9 +127,11 @@ liste_categorie_accueil2 = liste_categorie_accueil[:50]
 # print(len(liste_categorie_accueil2))
 nombre_de_categorie1 = len(liste_categorie_accueil2)
 
-
+print(f"Nombre de catégorie : {nombre_de_categorie1}")
 ##################################################################################################
 # Une boucle qui va lister les liens de chaque catégorie une par une
+print("Création d'un lien par catégorie")
+
 f, g = 0, 0
 nombre_de_categorie2 = nombre_de_categorie1
 nombre_de_categorie2 = nombre_de_categorie2 + 1
@@ -136,7 +142,8 @@ while g < nombre_de_categorie2:
         url_category = liste_categorie_accueil2[f]
         f = f + 1
     if g == nombre_de_categorie2:
-        print("Création des liens de chaque catégorie : Terminé")
+        print("Création d'un lien par catégorie : Terminé")
+        print("Vérification du nombre de page dans chaque catégorie")
         break
         # print("Téléchargement terminé")
 
@@ -145,14 +152,17 @@ while g < nombre_de_categorie2:
 
 
     ################################################################################################
+
     # Une boucle qui va initialiser un lien par rapport au nombre de pages
+
     page_category2 = 0
     while not page_category2 == 200:
         try:
+            print(f"Test de connexion pour l'url : {url_category} ")
             page_category = requests.get(url_category)
             page_category2 = page_category.status_code
             if page_category2 == 200:
-                print("Ligne 153")
+                print("Test : OK")
         except:
             print("Problème de connexion, nouvelle tentative dans 15 secondes")
             sleep(15)
@@ -209,7 +219,7 @@ while g < nombre_de_categorie2:
                         page_livre = requests.get(url_livre)
                         page_livre2 = page_livre.status_code
                         if page_livre2 == 200:
-                            print("Ligne 210")
+                            """print("Ligne 210")"""
 
                     except:
                         print("Problème de connexion, nouvelle tentative dans 15 secondes")
@@ -225,15 +235,8 @@ while g < nombre_de_categorie2:
                     recuperation_liens_livre4 = re.sub("\../", "", recuperation_liens_livre3)
                     liste_liens_livres.append(recuperation_liens_livre4)
 
-                if recherche_page1:
-                    liste_liens_livres2 = liste_liens_livres[54:-1]
-                    liste_liens_livres3.append(liste_liens_livres2)
-
-
-                if not recherche_page1:
-                    # Si recherche_page1 = None
-                    liste_liens_livres2 = liste_liens_livres[54:]
-                    liste_liens_livres3.append(liste_liens_livres2)
+                liste_liens_livres2 = liste_liens_livres[54:]
+                liste_liens_livres3.append(liste_liens_livres2)
 
 
 
@@ -248,10 +251,10 @@ for liste in liste_doublons1:
             liste_livre_sans_doublon.append(liste_doublons2)
             #print(liste_livre_sans_doublon)
 nombre_de_livre = len(liste_livre_sans_doublon)
-print("Liste de livres sans doublons", liste_livre_sans_doublon)
+#print(f"", liste_livre_sans_doublon)
 
 # Boucle qui m'affiche les liens de chaque livre pour reconstitution du lien et suppression des liens indésirable
-
+print("Création d'un lien pour chaque livre et suppression des liens indésirables")
 liste_clean1 = []
 yy = 0
 while not yy == nombre_de_livre:
@@ -261,146 +264,158 @@ while not yy == nombre_de_livre:
             yy = yy + 1
             nombre_de_caractere = len(liste3)
             if nombre_de_caractere == 48:
-                print("Suppression d'un mauvais lien ")
+                print(f"Suppression d'un mauvais lien : {liste3}")
+
             elif nombre_de_caractere > 48:
                 liste_clean1.append(liste3)
                 print(f"Création d'un lien :{liste3}")
                 print(f"Livre N° = {yy}")
-                sleep(0.3)
-
-
-
-
+                sleep(0.1)
 
 
 ##############################################################################################
 # Boucle qui va lister un par un les liens de chaque livre (sans les adresses indésirables)
-zz = 0
+# Mise en place d'une condition dans la boucle while qui renomme le répertoire catégorie lorsqu'il a fini tous les livres et met fin au programme
 nombre_de_livre2 = len(liste_clean1)
-#liste_clean2 = []
-for liste_clean3 in liste_clean1:
-    zz = zz + 1
+xx = nombre_de_livre2 + 1
+zz = 0
+print("Début d'intégration des données")
 
-    if zz > nombre_de_livre2:
-        print("Téléchargement terminé")
+
+
+while not zz == xx:
+    if zz == nombre_de_livre2:
+        sleep(5)
         nom, ext = os.path.splitext(f"{data}/BooksToScrape/Categories")
+        sleep(5)
         dateiso = time.strftime('%Y_%m_%d_%H_%M')
+        sleep(5)
         os.rename(f"{data}/BooksToScrape/Categories", nom + '_' + dateiso + ext)
+        print("Fin du téléchargement")
+        break
+    elif zz < nombre_de_livre2:
+        for liste_clean3 in liste_clean1:
+            if zz < nombre_de_livre2:
+                zz = zz + 1
+                page_lien_livre3 = 0
+                while not page_lien_livre3 == 200:
+                    try:
+                        page_lien_livre4 = requests.get(liste_clean3)
+                        page_lien_livre3 = page_lien_livre4.status_code
 
-    page_lien_livre3 = 0
-    while not page_lien_livre3 == 200:
-        try:
-            page_lien_livre4 = requests.get(liste_clean3)
-            page_lien_livre3 = page_lien_livre4.status_code
+                        if page_lien_livre3 == 200:
+                            """print("Ligne 293")"""
 
-            if page_lien_livre3 == 200:
-                print("Ligne 293")
+                    except:
+                        print("Problème de connexion, nouvelle tentative dans 15 secondes")
+                        sleep(15)
+                    soup_lien_livre4 = BeautifulSoup(page_lien_livre4.content, "html.parser")
+                    premiere_recuperation_1 = soup_lien_livre4.find_all("td")
+                    liste_recuperation_1 = []
+                    product_page_url = [liste_clean3]
+                    titre_image = liste_clean3[37:-11]
 
-        except:
-            print("Problème de connexion, nouvelle tentative dans 15 secondes")
-            sleep(15)
-        soup_lien_livre4 = BeautifulSoup(page_lien_livre4.content, "html.parser")
-        premiere_recuperation_1 = soup_lien_livre4.find_all("td")
-        liste_recuperation_1 = []
-        product_page_url = [liste_clean3]
-        titre_image = product_page_url[37:-11]
-        for premiere_recuperation_2 in premiere_recuperation_1:
-            liste_recuperation_1.append(premiere_recuperation_2.string)
-        universal_product_code = [liste_recuperation_1[0]]
-        price_including = [liste_recuperation_1[2]]
-        price_excluding = [liste_recuperation_1[3]]
-        review_rating = [liste_recuperation_1[-1]]
+                    for premiere_recuperation_2 in premiere_recuperation_1:
+                        liste_recuperation_1.append(premiere_recuperation_2.string)
+                    universal_product_code = [liste_recuperation_1[0]]
+                    price_including = [liste_recuperation_1[2]]
+                    price_excluding = [liste_recuperation_1[3]]
+                    review_rating = [liste_recuperation_1[-1]]
 
-        # quantite_stock_1 = number_available
-        quantite_stock_1 = soup_lien_livre4.find_all("td")
-        liste_quantite_stock_1 = []
-        for quantite_stock_2 in quantite_stock_1:
-            quantite_stock_3 = quantite_stock_2.string
-            #quantite_stock_4 = str(quantite_stock_3)
-            resultat = ([str(s) for s in re.findall(r"-?\d+\.?\d*", quantite_stock_3)])
-            liste_quantite_stock_1.append(resultat)
-        number_available = liste_quantite_stock_1[5]
+                    # quantite_stock_1 = number_available
+                    quantite_stock_1 = soup_lien_livre4.find_all("td")
+                    liste_quantite_stock_1 = []
+                    for quantite_stock_2 in quantite_stock_1:
+                        quantite_stock_3 = quantite_stock_2.string
+                        #quantite_stock_4 = str(quantite_stock_3)
+                        resultat = ([str(s) for s in re.findall(r"-?\d+\.?\d*", quantite_stock_3)])
+                        liste_quantite_stock_1.append(resultat)
+                    number_available = liste_quantite_stock_1[5]
 
-        # description_produit_1 = product_description
-        description_produit_1 = soup_lien_livre4.find_all("p")
-        liste_description_produit_1 = []
-        for description_produit_2 in description_produit_1:
-            liste_description_produit_1.append(description_produit_2.get_text())
-        product_description = [liste_description_produit_1[3]]
-        #print("Ligne 148", product_description)
-
-        sleep(1)
-        # title
-        title = titre_image
-
-        sleep(1)
-        # recuperation_categorie_1 = category
-        recuperation_categorie_1 = soup_lien_livre4.find_all("a")
-        liste_categorie_1 = []
-        for recuperation_categorie_2 in recuperation_categorie_1:
-            liste_categorie_1.append(recuperation_categorie_2.string)
-        category = [liste_categorie_1[3]]
+                    # description_produit_1 = product_description
+                    description_produit_1 = soup_lien_livre4.find_all("p")
+                    liste_description_produit_1 = []
+                    for description_produit_2 in description_produit_1:
+                        liste_description_produit_1.append(description_produit_2.get_text())
+                    product_description = [liste_description_produit_1[3]]
+                    #print("Ligne 148", product_description)
 
 
-        sleep(1)
-        # lien_image_1 = image_url
-        lien_image_1 = soup_lien_livre4.find_all("img")
-        liste_lien_image_1 = []
-        for lien_image_2 in lien_image_1:
-            lien_image_3 = (lien_image_2.get("src"))
-            lien_image_4 = re.sub('\../', "", lien_image_3)
-            lien_image_5 = url_accueil + lien_image_4
-            liste_lien_image_1.append(lien_image_5)
-        image_url = [liste_lien_image_1[0]]
+                    # title
+                    title = [titre_image]
+                    print(title)
 
 
-        # Création de mon fichier jpeg
-        image_url2 = liste_lien_image_1[0]
-        category2 = liste_categorie_1[3]
-        title3 = titre_image
-
-        z = open(f"{data}/BooksToScrape/Categories/{category2}/Images/{title3}.jpg", "wb")
-        reponse2 = 0
-        while not reponse2 == 200:
-            try:
-                reponse = requests.get(image_url2)
-                reponse2 = reponse.status_code
-                if reponse2 == 200:
-                    print("Ligne 371")
-            except:
-                print("Problème de connexion, nouvelle tentative dans 15 secondes")
-                sleep(15)
-        z.write(reponse.content)
-        z.close()
-        #print("Sorite de boucle")
-
-        print(f"Enregistrement des informations du livre '{title3}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}/BooksToScrape/Categories/{category2}")
+                    # recuperation_categorie_1 = category
+                    recuperation_categorie_1 = soup_lien_livre4.find_all("a")
+                    liste_categorie_1 = []
+                    for recuperation_categorie_2 in recuperation_categorie_1:
+                        liste_categorie_1.append(recuperation_categorie_2.string)
+                    category = [liste_categorie_1[3]]
 
 
-        print("\n \n \n")
-        # Création de l'en-tête
-        en_tete = ["product_page_url", "universal_product_code(upc)", "title", "price_including_tax",
-                   "price_excluding_tax", "number_available", "product_description", "category",
-                   "review_rating", "image_url"]
-        # Création d'un répertoire image par catégorie
 
-        if os.path.exists(f"{data}/BooksToScrape/Categories/{category2}/output.csv"):
-            print()
-        else:
-            with open(f"{data}/BooksToScrape/Categories/{category2}/output.csv", "w", encoding="utf-8") as fichier_csv:
-                writer = csv.writer(fichier_csv, delimiter=";")
-                writer.writerow(en_tete)
+                    # lien_image_1 = image_url
+                    lien_image_1 = soup_lien_livre4.find_all("img")
+                    liste_lien_image_1 = []
+                    for lien_image_2 in lien_image_1:
+                        lien_image_3 = (lien_image_2.get("src"))
+                        lien_image_4 = re.sub('\../', "", lien_image_3)
+                        lien_image_5 = url_accueil + lien_image_4
+                        liste_lien_image_1.append(lien_image_5)
+                    image_url = [liste_lien_image_1[0]]
 
-        # Ajout des données dans le fichier csv
-        with open(f"{data}/BooksToScrape/Categories/{category2}/output.csv", "a", encoding="utf8") as fichier_csv:
-            writer = csv.writer(fichier_csv, delimiter=";")
 
-            for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url in zip(
-                    product_page_url, universal_product_code, title, price_including, price_excluding,
-                    number_available, product_description, category, review_rating, image_url):
-                writer.writerow(
-                    [product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax,
-                     number_available, product_description, category, review_rating, image_url])
+                    # Création de mon fichier jpeg
+                    image_url2 = liste_lien_image_1[0]
+                    category2 = liste_categorie_1[3]
+                    title3 = titre_image
+
+                    z = open(f"{data}/BooksToScrape/Categories/{category2}/Images/{title3}.jpg", "wb")
+                    reponse2 = 0
+                    while not reponse2 == 200:
+                        try:
+                            reponse = requests.get(image_url2)
+                            reponse2 = reponse.status_code
+                            if reponse2 == 200:
+                                """print("Ligne 371")"""
+                        except:
+                            print("Problème de connexion, nouvelle tentative dans 15 secondes")
+                            sleep(15)
+                    z.write(reponse.content)
+                    z.close()
+                    #print("Sorite de boucle")
+
+                    print(f"Enregistrement des informations du livre '{title3}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}/BooksToScrape/Categories/{category2}")
+
+
+                    print("\n \n \n")
+                    # Création de l'en-tête
+                    en_tete = ["product_page_url", "universal_product_code(upc)", "title", "price_including_tax",
+                               "price_excluding_tax", "number_available", "product_description", "category",
+                               "review_rating", "image_url"]
+
+                    # Une condition qui controle si le fichier csv existe
+                    if os.path.exists(f"{data}/BooksToScrape/Categories/{category2}/output.csv"):
+                        print()
+                    else:
+                        with open(f"{data}/BooksToScrape/Categories/{category2}/output.csv", "w", encoding="utf-8") as fichier_csv:
+                            writer = csv.writer(fichier_csv, delimiter=";")
+                            writer.writerow(en_tete)
+
+                    # Ajout des données dans le fichier csv
+                    with open(f"{data}/BooksToScrape/Categories/{category2}/output.csv", "a", encoding="utf8") as fichier_csv:
+                        writer = csv.writer(fichier_csv, delimiter=";")
+
+                        for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url in zip(
+                                product_page_url, universal_product_code, title, price_including, price_excluding,
+                                number_available, product_description, category, review_rating, image_url):
+                            writer.writerow(
+                                [product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax,
+                                 number_available, product_description, category, review_rating, image_url])
+            elif zz == nombre_de_livre2:
+                break
+
 
 
 
