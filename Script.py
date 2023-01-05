@@ -10,12 +10,12 @@ import os
 manquant = "https://books.toscrape.com/catalogue/"
 liste_liens_livres3 = []
 global url_category, page_accueil, url_accueil, page_directory, page_category, reponse, liste_categorie_accueil2, recuperation_liens_livre6, page_livre, page_livre2, page_lien_livre2, page_lien_livre4
-data = os.getcwd()
-##################################################################################################
-# Condition qui permet de contrôler si le répertoire BookToScrape\Catégorie existe
 
-recherche_fichier_bookstoscrape_categories = os.path.exists(f"{data}/BooksToScrape/Categories")
+##################################################################################################
+# Condition qui permet de contrôler l'existance du répertoire BookToScrape et Categories
+data = os.getcwd()
 recherche_fichier_bookstoscrape = os.path.exists(f"{data}/BooksToScrape")
+recherche_fichier_bookstoscrape_categories = os.path.exists(f"{data}/BooksToScrape/Categories")
 if recherche_fichier_bookstoscrape:
     if recherche_fichier_bookstoscrape_categories:
         # print("Si le fichier Catégories existe")
@@ -35,7 +35,8 @@ else:
     os.mkdir(f"{data}/BooksToScrape/Categories")
 
 ##################################################################################################
-# Récupération du nom de chaque catégorie ( Travel ...)
+
+# Récupération du nom de chaque catégorie (Exemple : Travel ...)
 page_directory2 = 0
 while not page_directory2 == 200:
     url_directory = "https://books.toscrape.com/"
@@ -43,7 +44,7 @@ while not page_directory2 == 200:
         page_directory = requests.get(url_directory)
         page_directory2 = page_directory.status_code
         if page_directory2 == 200:
-            print(f"Test de connexion sur le site {url_directory}: OK")
+            print(f"Test de connexion sur le lien {url_directory}: OK")
 
     except:
         print("Problème de connexion, nouvelle tentative dans 15 secondes")
@@ -63,8 +64,8 @@ liste_directory_2 = liste_directory_1[3:53]
 #print(liste_directory_2)
 
 ###################################################################################################
-#Boucle qui va créer un répertoire pour chaque catégorie
-print("Création d'un répertoire par catégorie dans BooksToScrape")
+#Boucle qui va créer un répertoire pour chaque catégorie et un répertoire Images
+print("Création d'un répertoire portant le nom d'une catégorie et ajout du répertoire Images")
 nombre_categorie_accueil1 = len(liste_directory_2)
 nombre_categorie_accueil2 = nombre_categorie_accueil1 + 1
 h, i = 0, 0
@@ -75,31 +76,16 @@ while h < nombre_categorie_accueil2:
     elif h < nombre_categorie_accueil2:
         nom_categorie_accueil = liste_directory_2[i]
         os.mkdir(f"{data}/BooksToScrape/Categories/{nom_categorie_accueil}")
+        os.mkdir(f"{data}/BooksToScrape/Categories/{nom_categorie_accueil}/Images")
         i = i + 1
-
-
-
-##################################################################################################
-# Boucle qui va créer un répertoire Images dans "Categories/le_nom_de_la_catégorie"
-print("Création du répertoire Images dans chaque catégorie")
-nombre_categorie_accueil3 = nombre_categorie_accueil1 + 1
-j, k = 0, 0
-while j < nombre_categorie_accueil3:
-    j = j + 1
-    if j == nombre_categorie_accueil3:
-        break
-    elif j < nombre_categorie_accueil3:
-        nom_categorie_accueil2 = liste_directory_2[k]
-        os.mkdir(f"{data}/BooksToScrape/Categories/{nom_categorie_accueil2}/Images")
-        k = k + 1
-
-
-##################################################################################################
 ##################################################################################################
 # Création d'une liste de lien pour chaque catégorie de la page d'accueil books.toscrape.com
 page_accueil2 = 0
+url_accueil = "https://books.toscrape.com/"
+index = "index.html"
+books1 = "catalogue/category/books_1/index.html"
 while not page_accueil2 == 200:
-    url_accueil = "https://books.toscrape.com/"
+
     try:
         page_accueil = requests.get(url_accueil)
         page_accueil2 = page_accueil.status_code
@@ -109,14 +95,11 @@ while not page_accueil2 == 200:
         print("Problème de connexion, nouvelle tentative dans 15 secondes")
         sleep(15)
 soup_accueil = BeautifulSoup(page_accueil.content, "html.parser")
-index = "index.html"
-books1 = "catalogue/category/books_1/index.html"
-
 categorie_page_accueil1 = soup_accueil.find_all("a")
 liste_categorie_accueil = []
 for categorie_page_accueil2 in categorie_page_accueil1:
     categorie_page_accueil3 = categorie_page_accueil2.get("href")
-    # Une condition, ne récupère pas les liens index et books1
+    # Une condition, qui ne récupère pas les liens index et books1
     if categorie_page_accueil3 != index:
         if categorie_page_accueil3 != books1:
             # Création du lien
@@ -125,16 +108,19 @@ for categorie_page_accueil2 in categorie_page_accueil1:
 liste_categorie_accueil2 = liste_categorie_accueil[:50]
 # print(liste_categorie_accueil2)
 # print(len(liste_categorie_accueil2))
-nombre_de_categorie1 = len(liste_categorie_accueil2)
 
-print(f"Nombre de catégorie : {nombre_de_categorie1}")
+
+
 ##################################################################################################
 # Une boucle qui va lister les liens de chaque catégorie une par une
 print("Création d'un lien par catégorie")
 
+
+nombre_de_categorie1 = len(liste_categorie_accueil2)
+print(f"Nombre de catégorie : {nombre_de_categorie1}")
+
 f, g = 0, 0
-nombre_de_categorie2 = nombre_de_categorie1
-nombre_de_categorie2 = nombre_de_categorie2 + 1
+nombre_de_categorie2 = nombre_de_categorie1 + 1
 while g < nombre_de_categorie2:
     g = g + 1
     #print(liste_categorie_accueil2[f])
@@ -153,8 +139,8 @@ while g < nombre_de_categorie2:
 
     ################################################################################################
 
-    # Une boucle qui va initialiser un lien par rapport au nombre de pages
 
+    # Test de connexion d'une url
     page_category2 = 0
     while not page_category2 == 200:
         try:
@@ -167,22 +153,24 @@ while g < nombre_de_categorie2:
             print("Problème de connexion, nouvelle tentative dans 15 secondes")
             sleep(15)
 
+
     soup_category = BeautifulSoup(page_category.content, "html.parser")
-
-
-
     liste_liens_pages = []
+    # Si la recherche dans la balise "li" class_="current" ne trouve pas un nombre de
+    # pages, recherche_page1 me retourne la valeur None.
     recherche_page1 = soup_category.find("li", class_="current")
+    # Si recherche_page1 est vrai alors supprime les 10 derniers caractère de url_category
+    # Resultat = https://books.toscrape.com/catalogue/category/books/mystery_3/
     if recherche_page1:
-        # Si recherche_page1 est vrai alors supprime les 10 derniers caractère de url_category
         modif_url_category = url_category[:-10]
         recherche_page2 = recherche_page1.get_text()
-        #Suppression \n
+        #Suppression des espaces (\n)
         recherche_page3 = recherche_page2.strip()
         # Suppressions des caractères pour garder le nombre de pages
         recherche_page4 = recherche_page3[10:]
         recherche_page4 = int(recherche_page4)
         a = 0
+        # La boucle suivante
         while a != recherche_page4:
             a = a + 1
             nouvelle_adresse = f"{modif_url_category}page-{a}.html"
@@ -193,7 +181,8 @@ while g < nombre_de_categorie2:
         liste_liens_pages.append(url_category)
     #print(liste_liens_pages)
 
-    # Une boucle qui va lister une par une les url de chaque page
+    # Une boucle qui va lister une par une les url par rapport au nombre de pages
+    # Exemple : https://books.toscrape.com/catalogue/category/books/mystery_3/page-1.html
     nombre_page = len(liste_liens_pages)
     #print(nombre_page)
     b, c = 0, 0
@@ -211,15 +200,13 @@ while g < nombre_de_categorie2:
 
 
                 url_livre = resultat
-                #print("Ligne 63", url_livre)
-                url_livre_fusion = url_livre[0:37]
                 page_livre2 = 0
                 while not page_livre2 == 200:
                     try:
                         page_livre = requests.get(url_livre)
                         page_livre2 = page_livre.status_code
                         if page_livre2 == 200:
-                            """print("Ligne 210")"""
+                            """print("Ligne 227")"""
 
                     except:
                         print("Problème de connexion, nouvelle tentative dans 15 secondes")
@@ -240,7 +227,7 @@ while g < nombre_de_categorie2:
 
 
 
-#print(liste_liens_livres2)
+# Création d'une liste sans doublons
 liste_livre_sans_doublon = []
 # Suppressions des doublons
 liste_doublons1 = liste_liens_livres3
@@ -251,9 +238,9 @@ for liste in liste_doublons1:
             liste_livre_sans_doublon.append(liste_doublons2)
             #print(liste_livre_sans_doublon)
 nombre_de_livre = len(liste_livre_sans_doublon)
-#print(f"", liste_livre_sans_doublon)
 
-# Boucle qui m'affiche les liens de chaque livre pour reconstitution du lien et suppression des liens indésirable
+
+# Création d'un lien pour chaque livre et suppression des liens indésirables
 print("Création d'un lien pour chaque livre et suppression des liens indésirables")
 liste_clean1 = []
 yy = 0
@@ -275,12 +262,12 @@ while not yy == nombre_de_livre:
 
 ##############################################################################################
 # Boucle qui va lister un par un les liens de chaque livre (sans les adresses indésirables)
-# Mise en place d'une condition dans la boucle while qui renomme le répertoire catégorie lorsqu'il a fini tous les livres et met fin au programme
+# Mise en place d'une condition dans la boucle while qui renomme le répertoire catégorie
+# lorsqu'il a fini tous les livres et met fin au programme
 nombre_de_livre2 = len(liste_clean1)
 xx = nombre_de_livre2 + 1
 zz = 0
 print("Début d'intégration des données")
-
 
 
 while not zz == xx:
@@ -304,17 +291,22 @@ while not zz == xx:
                         page_lien_livre3 = page_lien_livre4.status_code
 
                         if page_lien_livre3 == 200:
-                            """print("Ligne 293")"""
-
+                            """print("Ligne 311")"""
                     except:
                         print("Problème de connexion, nouvelle tentative dans 15 secondes")
                         sleep(15)
+
+
                     soup_lien_livre4 = BeautifulSoup(page_lien_livre4.content, "html.parser")
                     premiere_recuperation_1 = soup_lien_livre4.find_all("td")
-                    liste_recuperation_1 = []
+                    # Récupération de product_page_url et title
                     product_page_url = [liste_clean3]
                     titre_image = liste_clean3[37:-11]
+                    title = [titre_image]
 
+                    # Récupération universal_product_code, price_including
+                    # price_excluding, review_rating
+                    liste_recuperation_1 = []
                     for premiere_recuperation_2 in premiere_recuperation_1:
                         liste_recuperation_1.append(premiere_recuperation_2.string)
                     universal_product_code = [liste_recuperation_1[0]]
@@ -322,7 +314,7 @@ while not zz == xx:
                     price_excluding = [liste_recuperation_1[3]]
                     review_rating = [liste_recuperation_1[-1]]
 
-                    # quantite_stock_1 = number_available
+                    # Récupération number_available
                     quantite_stock_1 = soup_lien_livre4.find_all("td")
                     liste_quantite_stock_1 = []
                     for quantite_stock_2 in quantite_stock_1:
@@ -332,30 +324,24 @@ while not zz == xx:
                         liste_quantite_stock_1.append(resultat)
                     number_available = liste_quantite_stock_1[5]
 
-                    # description_produit_1 = product_description
+                    # Récupération product_description
                     description_produit_1 = soup_lien_livre4.find_all("p")
                     liste_description_produit_1 = []
                     for description_produit_2 in description_produit_1:
                         liste_description_produit_1.append(description_produit_2.get_text())
                     product_description = [liste_description_produit_1[3]]
-                    #print("Ligne 148", product_description)
 
 
-                    # title
-                    title = [titre_image]
-                    print(title)
 
 
-                    # recuperation_categorie_1 = category
+                    # Récupération category
                     recuperation_categorie_1 = soup_lien_livre4.find_all("a")
                     liste_categorie_1 = []
                     for recuperation_categorie_2 in recuperation_categorie_1:
                         liste_categorie_1.append(recuperation_categorie_2.string)
                     category = [liste_categorie_1[3]]
 
-
-
-                    # lien_image_1 = image_url
+                    # Récupération image_url
                     lien_image_1 = soup_lien_livre4.find_all("img")
                     liste_lien_image_1 = []
                     for lien_image_2 in lien_image_1:
@@ -364,7 +350,6 @@ while not zz == xx:
                         lien_image_5 = url_accueil + lien_image_4
                         liste_lien_image_1.append(lien_image_5)
                     image_url = [liste_lien_image_1[0]]
-
 
                     # Création de mon fichier jpeg
                     image_url2 = liste_lien_image_1[0]
@@ -404,10 +389,11 @@ while not zz == xx:
                             writer.writerow(en_tete)
 
                     # Ajout des données dans le fichier csv
-                    with open(f"{data}/BooksToScrape/Categories/{category2}/output.csv", "a", encoding="utf8") as fichier_csv:
+                    with open(f"{data}/BooksToScrape/Categories/{category2}/output.csv", "a", encoding="utf-8") as fichier_csv:
                         writer = csv.writer(fichier_csv, delimiter=";")
 
-                        for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, product_description, category, review_rating, image_url in zip(
+                        for product_page_url, universal_product_code, title, price_including_tax, price_excluding_tax, number_available, \
+                                product_description, category, review_rating, image_url in zip(
                                 product_page_url, universal_product_code, title, price_including, price_excluding,
                                 number_available, product_description, category, review_rating, image_url):
                             writer.writerow(
