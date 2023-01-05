@@ -84,7 +84,7 @@ print("Création d'un lien par catégorie en cours...")
 index = "index.html"
 books1 = "catalogue/category/books_1/index.html"
 
-soup_directory = BeautifulSoup(page_directory.content, "html.parser")
+
 categorie_page_accueil1 = soup_directory.find_all("a")
 
 liste_categorie_accueil = []
