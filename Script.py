@@ -85,7 +85,7 @@ index = "index.html"
 books1 = "catalogue/category/books_1/index.html"
 
 
-categorie_page_accueil1 = soup_directory.find_all("a")
+categorie_page_accueil1 = directory_categorie_1
 
 liste_categorie_accueil = []
 for categorie_page_accueil2 in categorie_page_accueil1:
