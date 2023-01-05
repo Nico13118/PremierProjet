@@ -9,7 +9,7 @@ import os
 
 manquant = "https://books.toscrape.com/catalogue/"
 liste_liens_livres3 = []
-global url_category, page_accueil, url_accueil, page_directory, page_category, reponse, liste_categorie_accueil2, recuperation_liens_livre6, page_livre, page_livre2, page_lien_livre2, page_lien_livre4
+global url_category, page_accueil, url_accueil, page_directory, page_category, reponse, liste_categorie_accueil2, recuperation_liens_livre6, page_livre, page_livre2, page_lien_livre2, page_lien_livre4, url_directory
 
 ##################################################################################################
 # Condition qui permet de contrôler l'existance du répertoire BookToScrape et Categories
@@ -61,7 +61,7 @@ for directory_categorie_2 in directory_categorie_1:
     liste_directory_1.append(directory_categorie_3)
 liste_directory_2 = liste_directory_1[3:53]
 
-#print(liste_directory_2)
+
 
 ###################################################################################################
 #Boucle qui va créer un répertoire pour chaque catégorie et un répertoire Images
@@ -78,44 +78,29 @@ while h < nombre_categorie_accueil2:
         os.mkdir(f"{data}/BooksToScrape/Categories/{nom_categorie_accueil}")
         os.mkdir(f"{data}/BooksToScrape/Categories/{nom_categorie_accueil}/Images")
         i = i + 1
-##################################################################################################
-# Création d'une liste de lien pour chaque catégorie de la page d'accueil books.toscrape.com
-page_accueil2 = 0
-url_accueil = "https://books.toscrape.com/"
+############################################################################################
+# Création d'un lien pour chaque catégorie de la page d'accueil bookstoscrape.com
+print("Création d'un lien par catégorie en cours...")
 index = "index.html"
 books1 = "catalogue/category/books_1/index.html"
-while not page_accueil2 == 200:
 
-    try:
-        page_accueil = requests.get(url_accueil)
-        page_accueil2 = page_accueil.status_code
-        if page_accueil2 == 200:
-            print("Création d'une liste de lien par catégorie")
-    except:
-        print("Problème de connexion, nouvelle tentative dans 15 secondes")
-        sleep(15)
-soup_accueil = BeautifulSoup(page_accueil.content, "html.parser")
-categorie_page_accueil1 = soup_accueil.find_all("a")
+soup_directory = BeautifulSoup(page_directory.content, "html.parser")
+categorie_page_accueil1 = soup_directory.find_all("a")
+
 liste_categorie_accueil = []
 for categorie_page_accueil2 in categorie_page_accueil1:
     categorie_page_accueil3 = categorie_page_accueil2.get("href")
     # Une condition, qui ne récupère pas les liens index et books1
     if categorie_page_accueil3 != index:
         if categorie_page_accueil3 != books1:
-            # Création du lien
-            categorie_page_accueil4 = url_accueil + categorie_page_accueil3
+            # Concaténation de la variable url_directory et categorie_page_accueil3
+            categorie_page_accueil4 = url_directory + categorie_page_accueil3
             liste_categorie_accueil.append(categorie_page_accueil4)
 liste_categorie_accueil2 = liste_categorie_accueil[:50]
-# print(liste_categorie_accueil2)
-# print(len(liste_categorie_accueil2))
-
-
+print("Fin de la création d'un lien pour chaque catégorie")
 
 ##################################################################################################
 # Une boucle qui va lister les liens de chaque catégorie une par une
-print("Création d'un lien par catégorie")
-
-
 nombre_de_categorie1 = len(liste_categorie_accueil2)
 print(f"Nombre de catégorie : {nombre_de_categorie1}")
 
@@ -123,18 +108,13 @@ f, g = 0, 0
 nombre_de_categorie2 = nombre_de_categorie1 + 1
 while g < nombre_de_categorie2:
     g = g + 1
-    #print(liste_categorie_accueil2[f])
     if g < nombre_de_categorie2:
         url_category = liste_categorie_accueil2[f]
         f = f + 1
     if g == nombre_de_categorie2:
-        print("Création d'un lien par catégorie : Terminé")
-        print("Vérification du nombre de page dans chaque catégorie")
+        print("Fin du test de connexion")
         break
-        # print("Téléchargement terminé")
 
-        # break
-    #print(url_category)
 
 
     ################################################################################################
@@ -179,7 +159,7 @@ while g < nombre_de_categorie2:
     if not recherche_page1:
         # Si recherche_page1 = None alors ajoute l'adresse directement dans la liste
         liste_liens_pages.append(url_category)
-    #print(liste_liens_pages)
+
 
     # Une boucle qui va lister une par une les url par rapport au nombre de pages
     # Exemple : https://books.toscrape.com/catalogue/category/books/mystery_3/page-1.html
@@ -291,7 +271,7 @@ while not zz == xx:
                         page_lien_livre3 = page_lien_livre4.status_code
 
                         if page_lien_livre3 == 200:
-                            """print("Ligne 311")"""
+                            """print()"""
                     except:
                         print("Problème de connexion, nouvelle tentative dans 15 secondes")
                         sleep(15)
@@ -347,7 +327,7 @@ while not zz == xx:
                     for lien_image_2 in lien_image_1:
                         lien_image_3 = (lien_image_2.get("src"))
                         lien_image_4 = re.sub('\../', "", lien_image_3)
-                        lien_image_5 = url_accueil + lien_image_4
+                        lien_image_5 = url_directory + lien_image_4
                         liste_lien_image_1.append(lien_image_5)
                     image_url = [liste_lien_image_1[0]]
 
