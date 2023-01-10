@@ -12,30 +12,30 @@ liste_liens_livres3 = []
 global url_category, page_accueil, url_accueil, page_directory, page_category, reponse, liste_categorie_accueil2, recuperation_liens_livre6, page_livre, page_livre2, page_lien_livre2, page_lien_livre4, url_directory
 
 ##################################################################################################
-# Condition qui permet de contrôler l'existance du répertoire BookToScrape et Categories
+# Condition qui permet de contrôler l'existance du répertoire BookToScrape et Database
 data = os.getcwd()
 recherche_fichier_bookstoscrape = os.path.exists(f"{data}/BooksToScrape")
-recherche_fichier_bookstoscrape_categories = os.path.exists(f"{data}/BooksToScrape/Database")
-print("Vérification de la présence du répertoire BooksToScrape et Database")
+recherche_fichier_bookstoscrape_Database = os.path.exists(f"{data}/BooksToScrape/Database")
+print("Démarrage du programme")
 sleep(2)
 if recherche_fichier_bookstoscrape:
-    if recherche_fichier_bookstoscrape_categories:
-        # print("Si le fichier Catégories existe")
-        print("Suppression du répertoire Database\n")
+    if recherche_fichier_bookstoscrape_Database:
+        # print("Si le fichier Database existe")
+        print(f"Répertoire Database détecté, suppression en cours...\n")
         sleep(2)
         shutil.rmtree(f"{data}/BooksToScrape/Database")
         print(f"Création du répertoire Database dans {data}/BooksToScrape\n")
         sleep(2)
         os.mkdir(f"{data}/BooksToScrape/Database")
 
-    if not recherche_fichier_bookstoscrape_categories:
+    if not recherche_fichier_bookstoscrape_Database:
         print(f"Création du répertoire Database dans {data}/BooksToScrape\n")
         sleep(2)
         os.mkdir(f"{data}/BooksToScrape/Database")
 
 
 else:
-    print("Création du répertoire BooksToScrape et Database\n")
+    print(f"Création du répertoire BooksToScrape et Database\n")
     sleep(2)
     os.mkdir(f"{data}/BooksToScrape")
     os.mkdir(f"{data}/BooksToScrape/Database")
@@ -53,7 +53,7 @@ while not page_directory2 == 200:
             print(f"Test de connexion sur le lien {url_directory}: OK\n")
 
     except:
-        print("Problème de connexion, nouvelle tentative dans 15 secondes\n")
+        print(f"Problème de connexion, nouvelle tentative dans 15 secondes\n")
         sleep(15)
 
 soup_directory = BeautifulSoup(page_directory.content, "html.parser")
@@ -71,7 +71,7 @@ liste_directory_2 = liste_directory_1[3:53]
 
 ###################################################################################################
 #Boucle qui va créer un répertoire pour chaque catégorie et un répertoire Images
-print("Création d'un répertoire portant le nom d'une catégorie et ajout du répertoire Images\n")
+print(f"Création d'un répertoire portant le nom d'une catégorie et ajout du répertoire Images\n")
 nombre_categorie_accueil1 = len(liste_directory_2)
 nombre_categorie_accueil2 = nombre_categorie_accueil1 + 1
 h, i = 0, 0
@@ -86,7 +86,7 @@ while h < nombre_categorie_accueil2:
         i = i + 1
 ############################################################################################
 # Création d'un lien pour chaque catégorie de la page d'accueil bookstoscrape.com
-print("Création d'un lien par catégorie en cours...\n")
+print(f"Création d'un lien par catégorie en cours...\n")
 index = "index.html"
 books1 = "catalogue/category/books_1/index.html"
 
@@ -103,7 +103,7 @@ for categorie_page_accueil2 in categorie_page_accueil1:
             categorie_page_accueil4 = url_directory + categorie_page_accueil3
             liste_categorie_accueil.append(categorie_page_accueil4)
 liste_categorie_accueil2 = liste_categorie_accueil[:50]
-print("Fin de la création d'un lien pour chaque catégorie\n")
+print(f"Fin de la création d'un lien pour chaque catégorie\n")
 
 ##################################################################################################
 # Une boucle qui va lister les liens de chaque catégorie une par une
@@ -118,7 +118,7 @@ while g < nombre_de_categorie2:
         url_category = liste_categorie_accueil2[f]
         f = f + 1
     if g == nombre_de_categorie2:
-        print("Fin du test de connexion\n")
+        print(f"Fin de la création des liens pour chaque page\n")
         break
 
 
@@ -148,7 +148,7 @@ while g < nombre_de_categorie2:
     # Si recherche_page1 est vrai alors supprime les 10 derniers caractère de url_category
     # Resultat = https://books.toscrape.com/catalogue/category/books/mystery_3/
     if recherche_page1:
-        print(f"Test OK, cette url contient plusieurs pages")
+        print("Test OK, cette url contient plusieurs pages")
         modif_url_category = url_category[:-10]
         recherche_page2 = recherche_page1.get_text()
         #Suppression des espaces (\n)
@@ -166,12 +166,13 @@ while g < nombre_de_categorie2:
 
     if not recherche_page1:
         # Si recherche_page1 = None alors ajoute l'adresse directement dans la liste
-        print("Test OK, cette url ne contient pas de page suplémentaire \n")
+        print(f"Test OK, cette url ne contient pas de page suplémentaire \n")
         liste_liens_pages.append(url_category)
 
 
     # Une boucle qui va lister une par une les url par rapport au nombre de pages
     # Exemple : https://books.toscrape.com/catalogue/category/books/mystery_3/page-1.html
+    
     nombre_page = len(liste_liens_pages)
     #print(nombre_page)
     b, c = 0, 0
@@ -198,7 +199,7 @@ while g < nombre_de_categorie2:
                             """print("Ligne 227")"""
 
                     except:
-                        print("Problème de connexion, nouvelle tentative dans 15 secondes\n")
+                        print(f"Problème de connexion, nouvelle tentative dans 15 secondes\n")
                         sleep(15)
 
                 soup_livre = BeautifulSoup(page_livre.content, "html.parser")
@@ -230,7 +231,7 @@ nombre_de_livre = len(liste_livre_sans_doublon)
 
 
 # Création d'un lien pour chaque livre et suppression des liens indésirables
-print("Création d'un lien pour chaque livre et suppression des liens indésirables\n")
+print(f"Création d'un lien pour chaque livre et suppression des liens indésirables\n")
 liste_clean1 = []
 yy = 0
 while not yy == nombre_de_livre:
@@ -240,12 +241,12 @@ while not yy == nombre_de_livre:
             yy = yy + 1
             nombre_de_caractere = len(liste3)
             if nombre_de_caractere == 48:
-                print(f"Suppression d'un mauvais lien : {liste3}")
+                print(f"Suppression du lien suivant : {liste3}")
 
             elif nombre_de_caractere > 48:
                 liste_clean1.append(liste3)
 
-                print(f"Création d'un lien :{liste3}\n")
+                print(f"{liste3}\n")
                 sleep(0.1)
 
 
@@ -256,7 +257,7 @@ while not yy == nombre_de_livre:
 nombre_de_livre2 = len(liste_clean1)
 xx = nombre_de_livre2 + 1
 zz = 0
-
+print(f"Nombre total de livre à télécharger : {nombre_de_livre2}")
 print("Début d'intégration des données")
 
 
@@ -268,6 +269,7 @@ while not zz == xx:
         dateiso = time.strftime('%Y_%m_%d_%H_%M')
         sleep(5)
         os.rename(f"{data}/BooksToScrape/Database", nom + '_' + dateiso + ext)
+        print(f"Le répertoire Database à été renommé en Database{dateiso}")
         print("Fin du téléchargement")
         break
     elif zz < nombre_de_livre2:
@@ -347,6 +349,7 @@ while not zz == xx:
                     title3 = titre_image
 
                     z = open(f"{data}/BooksToScrape/Database/{category2}/Images/{title3}.jpg", "wb")
+                    
                     reponse2 = 0
                     while not reponse2 == 200:
                         try:
@@ -362,7 +365,7 @@ while not zz == xx:
                     #print("Sorite de boucle")
 
                     print(f"Enregistrement des informations du livre '{title3}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}/BooksToScrape/Database/{category2}")
-
+                    print(f"Téléchargement de l'image {title3}.jpg \nà l'emplacement suivant : {data}/BooksToScrape/Database/{category2}/Images ")
 
                     print("\n \n \n")
                     # Création de l'en-tête
