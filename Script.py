@@ -12,7 +12,7 @@ liste_liens_livres3 = []
 global url_category, page_accueil, url_accueil, page_directory, page_category, reponse, liste_categorie_accueil2, recuperation_liens_livre6, page_livre, page_livre2, page_lien_livre2, page_lien_livre4, url_directory
 
 ##################################################################################################
-# Condition qui permet de contrôler l'existance du répertoire BookToScrape et Database
+# Condition qui permet de contrôler l'existance du répertoire BooksToScrape et Database
 data = os.getcwd()
 recherche_fichier_bookstoscrape = os.path.exists(f"{data}/BooksToScrape")
 recherche_fichier_bookstoscrape_Database = os.path.exists(f"{data}/BooksToScrape/Database")
@@ -86,7 +86,7 @@ while h < nombre_categorie_accueil2:
         i = i + 1
 ############################################################################################
 # Création d'un lien pour chaque catégorie de la page d'accueil bookstoscrape.com
-print(f"Création d'un lien par catégorie en cours...\n")
+print(f"Récupération d'un lien pour chaque catégorie\n")
 index = "index.html"
 books1 = "catalogue/category/books_1/index.html"
 
@@ -103,7 +103,7 @@ for categorie_page_accueil2 in categorie_page_accueil1:
             categorie_page_accueil4 = url_directory + categorie_page_accueil3
             liste_categorie_accueil.append(categorie_page_accueil4)
 liste_categorie_accueil2 = liste_categorie_accueil[:50]
-print(f"Fin de la création d'un lien pour chaque catégorie\n")
+print(f"Fin de la récupération des liens\n")
 
 ##################################################################################################
 # Une boucle qui va lister les liens de chaque catégorie une par une
@@ -149,7 +149,6 @@ while g < nombre_de_categorie2:
     # Resultat = https://books.toscrape.com/catalogue/category/books/mystery_3/
     if recherche_page1:
         print("Test OK, cette url contient plusieurs pages")
-        modif_url_category = url_category[:-10]
         recherche_page2 = recherche_page1.get_text()
         #Suppression des espaces (\n)
         recherche_page3 = recherche_page2.strip()
@@ -160,6 +159,7 @@ while g < nombre_de_categorie2:
         # La boucle suivante
         while a != recherche_page4:
             a = a + 1
+            modif_url_category = url_category[:-10]
             nouvelle_adresse = f"{modif_url_category}page-{a}.html"
             print(nouvelle_adresse)
             liste_liens_pages.append(nouvelle_adresse)
