@@ -291,10 +291,7 @@ while not zz == xx:
 
                     soup_lien_livre4 = BeautifulSoup(page_lien_livre4.content, "html.parser")
                     premiere_recuperation_1 = soup_lien_livre4.find_all("td")
-                    # Récupération de product_page_url et title
-                    product_page_url = [liste_clean3]
-                    titre_image = liste_clean3[37:-11]
-                    title = [titre_image]
+
 
                     # Récupération universal_product_code, price_including
                     # price_excluding, review_rating
@@ -324,8 +321,6 @@ while not zz == xx:
                     product_description = [liste_description_produit_1[3]]
 
 
-
-
                     # Récupération category
                     recuperation_categorie_1 = soup_lien_livre4.find_all("a")
                     liste_categorie_1 = []
@@ -342,6 +337,12 @@ while not zz == xx:
                         lien_image_5 = url_directory + lien_image_4
                         liste_lien_image_1.append(lien_image_5)
                     image_url = [liste_lien_image_1[0]]
+
+                    # Récupération de product_page_url et title
+                    product_page_url = [liste_clean3]
+                    titre_image = liste_clean3[37:-11]
+                    title = [titre_image]
+
 
                     # Création de mon fichier jpeg
                     image_url2 = liste_lien_image_1[0]
