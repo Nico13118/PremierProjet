@@ -86,7 +86,7 @@ while h < nombre_categorie_accueil2:
         i = i + 1
 ############################################################################################
 # Création d'un lien pour chaque catégorie de la page d'accueil bookstoscrape.com
-print(f"Récupération d'un lien pour chaque catégorie\n")
+print(f"Récupération et création d'un lien par catégorie\n")
 index = "index.html"
 books1 = "catalogue/category/books_1/index.html"
 
@@ -103,7 +103,7 @@ for categorie_page_accueil2 in categorie_page_accueil1:
             categorie_page_accueil4 = url_directory + categorie_page_accueil3
             liste_categorie_accueil.append(categorie_page_accueil4)
 liste_categorie_accueil2 = liste_categorie_accueil[:50]
-print(f"Fin de la récupération des liens\n")
+print(f"Fin de la récupération et de la création d'un lien pour chaque catégorie\n")
 
 ##################################################################################################
 # Une boucle qui va lister les liens de chaque catégorie une par une
