@@ -341,7 +341,12 @@ while not zz == xx:
                     # Récupération de product_page_url et title
                     product_page_url = [liste_clean3]
                     titre_image = liste_clean3[37:-11]
-                    title = [titre_image]
+                    titre_1 = soup_lien_livre4.find_all("img")
+                    liste_titre_1 = []
+                    for titre_2 in titre_1:
+                        liste_titre_1.append(titre_2.get("alt"))
+                    title = [liste_titre_1[0]]
+                    #title = [titre_image]
 
 
                     # Création de mon fichier jpeg
