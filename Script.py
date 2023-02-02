@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 import csv
 from time import sleep
+from unidecode import unidecode
 import os
 
 manquant = "https://books.toscrape.com/catalogue/"
@@ -318,7 +319,11 @@ while not zz == xx:
                     liste_description_produit_1 = []
                     for description_produit_2 in description_produit_1:
                         liste_description_produit_1.append(description_produit_2.get_text())
-                    product_description = [liste_description_produit_1[3]]
+
+                    liste_description_produit_2 = liste_description_produit_1[3]
+                    liste_description_produit_3 = re.sub(r'[“’”—]', ' ', liste_description_produit_2)
+                    liste_description_produit_4 = unidecode(liste_description_produit_3)
+                    product_description = [liste_description_produit_3]
 
 
                     # Récupération category
