@@ -351,7 +351,7 @@ while not zz == xx:
                     for titre_2 in titre_1:
                         liste_titre_1.append(titre_2.get("alt"))
                     title = [liste_titre_1[0]]
-
+                    title_terminal = liste_titre_1[0]
 
 
                     # Création de mon fichier jpeg
@@ -375,7 +375,7 @@ while not zz == xx:
                     z.close()
                     #print("Sorite de boucle")
 
-                    print(f"Enregistrement des informations du livre '{titre_image}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}/BooksToScrape/Database/{category2}")
+                    print(f"Enregistrement des informations du livre '{title_terminal}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}/BooksToScrape/Database/{category2}")
                     print(f"Téléchargement de l'image {titre_image}.jpg \nà l'emplacement suivant : {data}/BooksToScrape/Database/{category2}/Images ")
 
                     print("\n \n \n")
