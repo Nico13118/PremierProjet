@@ -351,15 +351,15 @@ while not zz == xx:
                     for titre_2 in titre_1:
                         liste_titre_1.append(titre_2.get("alt"))
                     title = [liste_titre_1[0]]
-                    #title = [titre_image]
+
 
 
                     # Création de mon fichier jpeg
                     image_url2 = liste_lien_image_1[0]
                     category2 = liste_categorie_1[3]
-                    title3 = titre_image
 
-                    z = open(f"{data}/BooksToScrape/Database/{category2}/Images/{title3}.jpg", "wb")
+
+                    z = open(f"{data}/BooksToScrape/Database/{category2}/Images/{titre_image}.jpg", "wb")
                     
                     reponse2 = 0
                     while not reponse2 == 200:
@@ -375,8 +375,8 @@ while not zz == xx:
                     z.close()
                     #print("Sorite de boucle")
 
-                    print(f"Enregistrement des informations du livre '{title3}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}/BooksToScrape/Database/{category2}")
-                    print(f"Téléchargement de l'image {title3}.jpg \nà l'emplacement suivant : {data}/BooksToScrape/Database/{category2}/Images ")
+                    print(f"Enregistrement des informations du livre '{titre_image}' dans un fichier au format csv dans le répertoire : {category2} \nEmplacement du fichier csv : {data}/BooksToScrape/Database/{category2}")
+                    print(f"Téléchargement de l'image {titre_image}.jpg \nà l'emplacement suivant : {data}/BooksToScrape/Database/{category2}/Images ")
 
                     print("\n \n \n")
                     # Création de l'en-tête
